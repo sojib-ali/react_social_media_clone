@@ -28,8 +28,8 @@ const SignupForm = () => {
   const {checkAuthUser, isLoading: isUserLoading} = useUserContext();
   const navigate = useNavigate();
 
-  const {mutateAsync: createUserAccount,isLoading: isCreatingUser} = useCreateUserAccount();
-  const {mutateAsync: signInAccount, isLoading: isSigningIn} = useSignInAccount();
+  const {mutateAsync: createUserAccount,isPending: isCreatingAccount} = useCreateUserAccount();
+  const {mutateAsync: signInAccount, isPending: isSigningIn} = useSignInAccount();
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof SignupValidation>>({
@@ -65,7 +65,7 @@ const SignupForm = () => {
 
    if(isLoggedIn){
     form.reset();
-    navigate('/home');
+    navigate('/');
    }else{
     return toast({
       title: 'Sign in failed. Please try again.'
@@ -143,7 +143,7 @@ const SignupForm = () => {
             )}
           />
           <Button type="submit" className="shad-button_primary">
-            {isCreatingUser? (
+            {isCreatingAccount? (
               <div className="flex-center gap-2">
                <Loader /> Loading...
               </div>
