@@ -59,10 +59,10 @@ const AuthProvider  = ({children}:{children:React.ReactNode}) => {
     //everytime it reloads, check if user is authenticated
     const navigate = useNavigate();
 
-    // localStorage.getItem('cookieFallback') === null
     useEffect(()=>{
         if(
-            localStorage.getItem('cookieFallback') === '[]'
+            localStorage.getItem('cookieFallback') === '[]' ||
+            localStorage.getItem('cookieFallback') === null
         ) navigate('/sign-in')
     },[]);
 
