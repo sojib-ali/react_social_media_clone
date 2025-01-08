@@ -1,5 +1,5 @@
-import { INewUser } from "@/types";
-import { account, appwriteConfig, avatars, databases } from "./config";
+import { INewPost, INewUser } from "@/types";
+import { account, appwriteConfig, avatars, databases, storage } from "./config";
 import { ID } from "appwrite";
 import { Query } from "appwrite";
 
@@ -89,4 +89,65 @@ export async function signOutAccount(){
         console.log(error);
         return error;
     }
-}   
+}
+
+export async function createPost(post: INewPost){
+    try{
+        //upload image to storage;
+        const uploadedFile = await uploadFile(post.file[0]);
+
+        if(!uploadFile) throw Error;
+        //Get file url
+
+        const fileUrl = getFilePreview(uploadedFile.$id);
+
+        if(!fileUrl){
+            deleteFile(uploadedFile.$id)
+            throw Error;
+        }
+
+        //convert tags in an array
+        const tags = post.tags?.replace(/ /g,'').split(',') || [];
+    } catch(error){
+        console.log(error);
+    }
+}
+
+export async function uploadFile(file: File){
+    try{
+        const uploadedFile = await storage.createFile(
+            appwriteConfig.storageId,
+            ID.unique(),
+            file
+        );
+        return uploadedFile
+    } catch(error){
+        console.log(error);
+    }
+}
+
+export async function getFilePreview(fieldId: string){
+    try {
+        const fileUrl = storage.getFilePreview(
+            appwriteConfig.storageId,
+            fieldId,
+            2000,
+            2000,
+            "top",
+            100,
+        )
+        return fileUrl;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export async function deleteFile(fileId: string) {
+    try {
+        await storage.deleteFile(appwriteConfig.storageId, fileId);
+
+        return {status: 'ok'}
+    } catch (error) {
+        console.log(error);
+    }
+}
