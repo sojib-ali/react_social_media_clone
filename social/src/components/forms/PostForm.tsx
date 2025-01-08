@@ -16,8 +16,7 @@ import { Textarea } from "../ui/textarea"
 import FileUploader from "../shared/FileUploader"
 import { PostValidation } from "@/lib/validation"
 import { Models } from "appwrite"
-import {useCreatePost} from "@lib/react-query/queriesAndMutations"
-
+import { useCreatePost } from "@/lib/react-query/QueriesAndMutation"
 type PostFormProps = {
   post?: Models.Document;
 }
